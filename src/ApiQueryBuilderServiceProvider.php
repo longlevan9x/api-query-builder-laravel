@@ -22,7 +22,7 @@ class ApiQueryBuilderServiceProvider extends ServiceProvider
 	 */
 	public function boot() {
 		$this->publishes([
-			__DIR__ . '/config.php' => config_path('api-query-builder.php'),
+			__DIR__ . '/config.php' => config_path('query-builder-api.php'),
 		]);
 	}
 
@@ -30,6 +30,6 @@ class ApiQueryBuilderServiceProvider extends ServiceProvider
 	 * Register any application services.
 	 */
 	public function register() {
-		$this->mergeConfigFrom(__DIR__ . '/config.php', 'api-query-builder');
+		$this->mergeConfigFrom(__DIR__ . '/config.php', 'query-bui-apilder');
 	}
 }
