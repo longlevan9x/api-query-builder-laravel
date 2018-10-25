@@ -168,6 +168,19 @@ class QueryBuilder
 	}
 
 	/**
+	 * @return \Illuminate\Database\Eloquent\Builder[]|Collection|mixed
+	 */
+	public function first() {
+		$result = $this->query->first();
+
+		if ($this->hasAppends()) {
+			$result = $this->addAppendsToModel($result);
+		}
+
+		return $result;
+	}
+
+	/**
 	 * @return mixed|Paginator
 	 * @throws Exception
 	 */
