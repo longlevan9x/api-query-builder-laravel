@@ -15,6 +15,14 @@ trait UriParserTrait
 	 */
 	protected function getUriApiAppends() {
 		$appends = request()->query('appends', []);
+
 		return $this->appends = explode(',', $appends);
+	}
+
+	/**
+	 * @return bool
+	 */
+	protected function hasUriApiAppends() {
+		return !empty($this->getUriApiAppends());
 	}
 }
