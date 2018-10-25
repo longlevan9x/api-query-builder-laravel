@@ -30,6 +30,10 @@ trait UriParserTrait
 		return !empty($this->getUriApiAppends());
 	}
 
+	/**
+	 * @param $appends
+	 * @return array
+	 */
 	protected function setUriApiAppends($appends) {
 		if ($this->hasUriApiAppends()) {
 			return $this->appends = $this->getUriApiAppends();
