@@ -8,6 +8,8 @@ namespace Pika\Api;
  * Time: 10:58
  */
 
+use Illuminate\Http\Request;
+
 /**
  * Class UrlParser
  * @package Pika\Api
