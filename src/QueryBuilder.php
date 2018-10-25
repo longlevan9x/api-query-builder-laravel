@@ -171,13 +171,7 @@ class QueryBuilder
 	 * @return \Illuminate\Database\Eloquent\Model|object|static|null
 	 */
 	public function first() {
-		$result = $this->query->first();
-
-		if ($this->hasAppends()) {
-			$result = $this->addAppendsToModel($result);
-		}
-
-		return $result;
+		return $this->get()->get(0);
 	}
 
 	/**
