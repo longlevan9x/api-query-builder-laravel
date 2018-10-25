@@ -20,7 +20,7 @@ trait UriParserTrait
 	protected function getUriApiAppends() {
 		$appends = request()->query('appends', []);
 
-		return $this->appends = explode(',', $appends);
+		return explode(',', $appends);
 	}
 
 	/**
@@ -28,5 +28,13 @@ trait UriParserTrait
 	 */
 	protected function hasUriApiAppends() {
 		return !empty($this->getUriApiAppends());
+	}
+
+	protected function setUriApiAppends($appends) {
+		if ($this->hasUriApiAppends()) {
+			return $this->appends = $this->getUriApiAppends();
+		}
+
+		return $this->appends = $appends;
 	}
 }
