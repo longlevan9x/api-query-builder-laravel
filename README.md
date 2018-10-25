@@ -1,4 +1,5 @@
 # API Query Builder Package For Laravel & Lumen
 
-###### Thu vien sao chep tu thu vien  https://github.com/selahattinunlu/laravel-api-query-builder
-###### Do thu vien do khong cap nen toi sao chep ra. moi thac mac gui ve mail longvan1296@gmail.com.
+Gallery copy from library https://github.com/selahattinunlu/laravel-api-query-builder.
+
+Since the library does not update. Any questions mailed to longvan1296@gmail.com.om.
