@@ -168,7 +168,7 @@ class QueryBuilder
 	}
 
 	/**
-	 * @return \Illuminate\Database\Eloquent\Builder[]|Collection|mixed
+	 * @return \Illuminate\Database\Eloquent\Model|object|static|null
 	 */
 	public function first() {
 		$result = $this->query->first();
