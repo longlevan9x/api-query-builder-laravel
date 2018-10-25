@@ -12,7 +12,7 @@ namespace Pika\Api;
  * Class UrlParser
  * @package Pika\Api
  */
-class UrlParser
+class UriParser
 {
 	const PATTERN             = '/!=|=|<=|<|>=|>/';
 	const ARRAY_QUERY_PATTERN = '/(.*)\[\]/';
