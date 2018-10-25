@@ -8,6 +8,10 @@
 
 namespace Pika\Api\Traits;
 
+/**
+ * Trait UriParserTrait
+ * @package Pika\Api\Traits
+ */
 trait UriParserTrait
 {
 	/**
