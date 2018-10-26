@@ -96,9 +96,14 @@ class QueryBuilder
 	protected $query;
 
 	/**
-	 * @var
+	 * @var \Illuminate\Database\Eloquent\Model|object|static|null
 	 */
 	protected $result;
+
+	/**
+	 * @var \Illuminate\Database\Eloquent\Builder[]|Collection|mixex
+	 */
+	protected $results;
 
 	/**
 	 * QueryBuilder constructor.
@@ -158,7 +163,7 @@ class QueryBuilder
 	 * @return \Illuminate\Database\Eloquent\Builder[]|Collection|mixed
 	 */
 	public function get() {
-		$result = $this->query->get();
+		$this->results = $result = $this->query->get();
 
 		if ($this->hasAppends()) {
 			$result = $this->addAppendsToModel($result);
@@ -171,7 +176,9 @@ class QueryBuilder
 	 * @return \Illuminate\Database\Eloquent\Model|object|static|null
 	 */
 	public function first() {
-		return $this->get()->get(0);
+		$this->result = $this->get()->get(0);
+
+		return $this->result;
 	}
 
 	/**
@@ -588,5 +595,34 @@ class QueryBuilder
 			'path'     => BasePaginator::resolveCurrentPath(),
 			'pageName' => $pageName,
 		]))->setQueryUri($this->uriParser->getQueryUri());
+	}
+
+
+	/**
+	 * @return Model|null|object|QueryBuilder
+	 */
+	public function getResult() {
+		return $this->result;
+	}
+
+	/**
+	 * @param $result
+	 */
+	public function setResult($result) {
+		$this->result = $result;
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Builder[]|Collection|mixex
+	 */
+	public function getResults() {
+		return $this->results;
+	}
+
+	/**
+	 * @param $results
+	 */
+	public function setResults($results) {
+		$this->results = $results;
 	}
 }
