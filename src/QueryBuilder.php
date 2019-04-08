@@ -113,8 +113,9 @@ class QueryBuilder
 	 * QueryBuilder constructor.
 	 * @param Model   $model
 	 * @param Request $request
+	 * @param Request $defaultRequest
 	 */
-	public function __construct(Model $model, Request $request) {
+	public function __construct(Model $model, Request $request, Request $defaultRequest = null) {
 		$this->orderBy = config('api-query-builder.orderBy');
 
 		$this->limit = config('api-query-builder.limit');
@@ -124,6 +125,10 @@ class QueryBuilder
 		$this->model = $model;
 
 		$this->uriParser = new UriParser($request);
+
+		if (isset($defaultRequest)) {
+			$this->setDefaultUri($defaultRequest);
+		}
 
 		$this->query = $this->model->newQuery();
 	}
@@ -218,6 +223,7 @@ class QueryBuilder
 	 */
 	public function setDefaultUri(Request $request) {
 		$this->defaultUriParser = new UriParser($request);
+
 		return $this;
 	}
 
@@ -227,6 +233,7 @@ class QueryBuilder
 	 */
 	public function setUriParser(Request $request) {
 		$this->uriParser = new UriParser($request);
+
 		return $this;
 	}
 
