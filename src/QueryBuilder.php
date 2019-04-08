@@ -36,6 +36,10 @@ class QueryBuilder
 	protected $uriParser;
 
 	/**
+	 * @var \Pika\Api\UriParser
+	 */
+	protected $defaultUriParser;
+	/**
 	 * @var array
 	 */
 	protected $wheres = [];
@@ -209,14 +213,67 @@ class QueryBuilder
 	}
 
 	/**
+	 * @param Request $request
+	 * @return $this
+	 */
+	public function setDefaultUri(Request $request) {
+		$this->defaultUriParser = new UriParser($request);
+		return $this;
+	}
+
+	/**
+	 * @param Request $request
+	 * @return $this
+	 */
+	public function setUriParser(Request $request) {
+		$this->uriParser = new UriParser($request);
+		return $this;
+	}
+
+	/**
+	 * @return Model|null|object|QueryBuilder
+	 */
+	public function getResult() {
+		return $this->result;
+	}
+
+	/**
+	 * @param $result
+	 */
+	public function setResult($result) {
+		$this->result = $result;
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Builder[]|Collection|mixex
+	 */
+	public function getResults() {
+		return $this->results;
+	}
+
+	/**
+	 * @param $results
+	 */
+	public function setResults($results) {
+		$this->results = $results;
+	}
+
+	/**
 	 * @return $this
 	 */
 	protected function prepare() {
 		$this->setWheres($this->uriParser->whereParameters());
 
+		$defaultConstantParameters = [];
+		if (isset($this->defaultUriParser)) {
+			$this->setWheres($this->defaultUriParser->whereParameters());
+			$defaultConstantParameters = $this->defaultUriParser->constantParameters();
+		}
+
 		$constantParameters = $this->uriParser->constantParameters();
 
 		array_map([$this, 'prepareConstant'], $constantParameters);
+		array_map([$this, 'prepareDefaultConstant'], $defaultConstantParameters);
 
 		if ($this->hasIncludes() && $this->hasRelationColumns()) {
 			$this->fixRelationColumns();
@@ -236,6 +293,22 @@ class QueryBuilder
 		$callback = [$this, $this->setterMethodName($parameter)];
 
 		$callbackParameter = $this->uriParser->queryParameter($parameter);
+
+		call_user_func($callback, $callbackParameter['value']);
+	}
+
+
+	/**
+	 * @param $parameter
+	 */
+	private function prepareDefaultConstant($parameter) {
+		if (!$this->defaultUriParser->hasQueryParameter($parameter)) {
+			return;
+		}
+
+		$callback = [$this, $this->setterMethodName($parameter)];
+
+		$callbackParameter = $this->defaultUriParser->queryParameter($parameter);
 
 		call_user_func($callback, $callbackParameter['value']);
 	}
@@ -595,34 +668,5 @@ class QueryBuilder
 			'path'     => BasePaginator::resolveCurrentPath(),
 			'pageName' => $pageName,
 		]))->setQueryUri($this->uriParser->getQueryUri());
-	}
-
-
-	/**
-	 * @return Model|null|object|QueryBuilder
-	 */
-	public function getResult() {
-		return $this->result;
-	}
-
-	/**
-	 * @param $result
-	 */
-	public function setResult($result) {
-		$this->result = $result;
-	}
-
-	/**
-	 * @return \Illuminate\Database\Eloquent\Builder[]|Collection|mixex
-	 */
-	public function getResults() {
-		return $this->results;
-	}
-
-	/**
-	 * @param $results
-	 */
-	public function setResults($results) {
-		$this->results = $results;
 	}
 }
