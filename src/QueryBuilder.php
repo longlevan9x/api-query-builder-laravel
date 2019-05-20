@@ -101,11 +101,6 @@ class QueryBuilder
 	protected $query;
 
 	/**
-	 * @var \Illuminate\Database\Eloquent\Model|object|static|null
-	 */
-	protected $result;
-
-	/**
 	 * QueryBuilder constructor.
 	 * @param Model   $model
 	 * @param Request $request
@@ -169,7 +164,7 @@ class QueryBuilder
 	 * @return \Illuminate\Database\Eloquent\Builder[]|Collection|mixed
 	 */
 	public function get() {
-		$this->results = $result = $this->query->get();
+		$result = $this->query->get();
 
 		if ($this->hasAppends()) {
 			$result = $this->addAppendsToModel($result);
