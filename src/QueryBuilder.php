@@ -10,6 +10,7 @@ namespace Pika\Api;
 
 
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -105,18 +106,13 @@ class QueryBuilder
 	protected $result;
 
 	/**
-	 * @var \Illuminate\Database\Eloquent\Builder[]|Collection|mixex
-	 */
-	protected $results;
-
-	/**
 	 * QueryBuilder constructor.
 	 * @param Model   $model
 	 * @param Request $request
 	 * @param Request $defaultRequest
 	 */
 	public function __construct(Model $model, Request $request, Request $defaultRequest = null) {
-		$this->orderBy = config('api-query-builder.orderBy');
+		$this->orderBy = config('api-query-builder.orderBy', []);
 
 		$this->limit = config('api-query-builder.limit');
 
@@ -155,6 +151,7 @@ class QueryBuilder
 			$this->query->skip($this->offset);
 		}
 
+
 		array_map([$this, 'addOrderByToQuery'], $this->orderBy);
 
 		$this->query->with($this->includes);
@@ -185,9 +182,7 @@ class QueryBuilder
 	 * @return \Illuminate\Database\Eloquent\Model|object|static|null
 	 */
 	public function first() {
-		$this->result = $this->get()->get(0);
-
-		return $this->result;
+		return $this->get()->get(0);
 	}
 
 	/**
@@ -227,6 +222,7 @@ class QueryBuilder
 		return $this;
 	}
 
+	/** Set method */
 	/**
 	 * @param Request $request
 	 * @return $this
@@ -238,32 +234,32 @@ class QueryBuilder
 	}
 
 	/**
-	 * @return Model|null|object|QueryBuilder
+	 * @param Builder $query
+	 * @return $this
 	 */
-	public function getResult() {
-		return $this->result;
+	public function setQuery(Builder $query) {
+		$this->query = $query;
+		return $this;
 	}
 
 	/**
-	 * @param $result
+	 * @param $excludedParameters
+	 * @return $this
 	 */
-	public function setResult($result) {
-		$this->result = $result;
+	public function setExcludedParameters($excludedParameters) {
+		$this->excludedParameters = $excludedParameters;
+		return $this;
 	}
 
 	/**
-	 * @return \Illuminate\Database\Eloquent\Builder[]|Collection|mixex
+	 * @param $limit
+	 * @return $this
 	 */
-	public function getResults() {
-		return $this->results;
+	public function limit($limit) {
+		$this->setLimit($limit);
+		return $this;
 	}
-
-	/**
-	 * @param $results
-	 */
-	public function setResults($results) {
-		$this->results = $results;
-	}
+	/** Set Method */
 
 	/**
 	 * @return $this
@@ -273,7 +269,10 @@ class QueryBuilder
 
 		$defaultConstantParameters = [];
 		if (isset($this->defaultUriParser)) {
-			$this->setWheres($this->defaultUriParser->whereParameters());
+			$defaultWhereParameters = $this->defaultUriParser->whereParameters();
+			if (!empty($defaultWhereParameters)) {
+				$this->setWheres($defaultWhereParameters);
+			}
 			$defaultConstantParameters = $this->defaultUriParser->constantParameters();
 		}
 
@@ -449,7 +448,7 @@ class QueryBuilder
 	 * @param $parameters
 	 */
 	private function setWheres($parameters) {
-		$this->wheres = $parameters;
+		$this->wheres = array_merge($this->wheres, $parameters);
 	}
 
 	/**
