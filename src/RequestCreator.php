@@ -56,7 +56,7 @@ class RequestCreator
 			$server = $_SERVER;
 		}
 
-		$requestUri = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : $_SERVER['REQUEST_URI'];
+		$requestUri = isset($_SERVER['PATH_INFO']) ? $_SERVER['PATH_INFO'] : $_SERVER['REDIRECT_URL'];
 		$requestQueryString = '';
 
 		if (count($get) > 0) {
